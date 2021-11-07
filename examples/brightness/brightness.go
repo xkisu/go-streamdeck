@@ -3,9 +3,9 @@ package main
 import (
 	"time"
 
-	streamdeck "github.com/magicmonkey/go-streamdeck"
-	"github.com/magicmonkey/go-streamdeck/buttons"
-	_ "github.com/magicmonkey/go-streamdeck/devices"
+	streamdeck "github.com/xkisu/go-streamdeck"
+	"github.com/xkisu/go-streamdeck/buttons"
+	_ "github.com/xkisu/go-streamdeck/devices"
 )
 
 func main() {

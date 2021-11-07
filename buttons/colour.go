@@ -5,7 +5,7 @@ import (
 	"image/color"
 	"image/draw"
 
-	streamdeck "github.com/magicmonkey/go-streamdeck"
+	streamdeck "github.com/xkisu/go-streamdeck"
 )
 
 // ColourButton represents a button which is a solid block of a single colour
