@@ -157,8 +157,7 @@ func (d *Device) WriteImageToButton(btnIndex int, filename string) error {
 	if err != nil {
 		return err
 	}
-	d.WriteRawImageToButton(btnIndex, img)
-	return nil
+	return d.WriteRawImageToButton(btnIndex, img)
 }
 
 func (d *Device) buttonPressListener() {
