@@ -202,7 +202,11 @@ func (d *Device) ResetComms() {
 
 // WriteRawImageToButton takes an `image.Image` and writes it to the given button, after resizing and rotating the image to fit the button (for some reason the StreamDeck screens are all upside down)
 func (d *Device) WriteRawImageToButton(btnIndex int, rawImg image.Image) error {
-	img := resizeAndRotate(rawImg, d.deviceType.imageSize.X, d.deviceType.imageSize.Y, d.deviceType.name)
+	img, err := resizeAndRotate(rawImg, d.deviceType.imageSize.X, d.deviceType.imageSize.Y, d.deviceType.name)
+	if err != nil {
+		return err
+	}
+
 	imgForButton, err := getImageForButton(img, d.deviceType.imageFormat)
 	if err != nil {
 		return err
@@ -256,7 +260,7 @@ func Min(x, y int) int {
 	return y
 }
 
-func Max (x, y int) int {
+func Max(x, y int) int {
 	if x > y {
 		return x
 	}

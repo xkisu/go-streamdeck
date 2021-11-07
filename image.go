@@ -16,28 +16,32 @@ import (
 	"golang.org/x/image/bmp"
 )
 
-func resizeAndRotate(img image.Image, width, height int, devname string) image.Image {
-	g, _ := deviceSpecifics(devname, width, height)
+func resizeAndRotate(img image.Image, width, height int, devname string) (image.Image, error) {
+	g, err := deviceSpecifics(devname, width, height)
+	if err != nil {
+		return nil, err
+	}
+
 	res := image.NewRGBA(g.Bounds(img.Bounds()))
 	g.Draw(res, img)
-	return res
+	return res, nil
 }
 
 func deviceSpecifics(devName string, width, height int) (*gift.GIFT, error) {
 	switch devName {
-		case "Streamdeck XL", "Streamdeck (original v2)":
-			return gift.New(
-				gift.Resize(width, height, gift.LanczosResampling),
-				gift.Rotate180(),
-			), nil
-		case "Streamdeck Mini":
-			return gift.New(
-				gift.Resize(width, height, gift.LanczosResampling),
-				gift.Rotate90(),
-				gift.FlipVertical(),
-			), nil
-		default:
-			return nil, errors.New(fmt.Sprintf("Unsupported Device: %s", devName))
+	case "Streamdeck XL", "Streamdeck (original v2)":
+		return gift.New(
+			gift.Resize(width, height, gift.LanczosResampling),
+			gift.Rotate180(),
+		), nil
+	case "Streamdeck Mini":
+		return gift.New(
+			gift.Resize(width, height, gift.LanczosResampling),
+			gift.Rotate90(),
+			gift.FlipVertical(),
+		), nil
+	default:
+		return nil, errors.New(fmt.Sprintf("Unsupported Device: %s", devName))
 	}
 }
 
