@@ -235,7 +235,7 @@ func (d *Device) rawWriteToButton(btnIndex int, rawImage []byte) error {
 		imageReportPayloadLength := imageReportLength - imageReportHeaderLength
 
 		if halfImage > imageReportPayloadLength {
-			log.Fatalf("image too large: %d", halfImage*2)
+			log.Fatalf("image too large: %d (%d > %d)", halfImage*2, halfImage, imageReportPayloadLength)
 		}
 
 		thisLength := 0
