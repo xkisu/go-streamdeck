@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"log"
 
 	"github.com/karalabe/hid"
 )
@@ -223,6 +224,8 @@ func (d *Device) rawWriteToButton(btnIndex int, rawImage []byte) error {
 
 	pageNumber := 0
 	bytesRemaining := len(rawImage)
+	halfImage := len(rawImage) / 2
+	bytesSent := 0
 
 	for bytesRemaining > 0 {
 
@@ -231,14 +234,20 @@ func (d *Device) rawWriteToButton(btnIndex int, rawImage []byte) error {
 		imageReportHeaderLength := len(header)
 		imageReportPayloadLength := imageReportLength - imageReportHeaderLength
 
+		if halfImage > imageReportPayloadLength {
+			log.Fatalf("image too large: %d", halfImage*2)
+		}
+
 		thisLength := 0
 		if imageReportPayloadLength < bytesRemaining {
-			thisLength = imageReportPayloadLength
+			if d.deviceType.name == "Stream Deck Original" {
+				thisLength = halfImage
+			} else {
+				thisLength = imageReportPayloadLength
+			}
 		} else {
 			thisLength = bytesRemaining
 		}
-
-		bytesSent := pageNumber * imageReportPayloadLength
 
 		payload := append(header, rawImage[bytesSent:(bytesSent+thisLength)]...)
 		padding := make([]byte, imageReportLength-len(payload))
@@ -248,6 +257,7 @@ func (d *Device) rawWriteToButton(btnIndex int, rawImage []byte) error {
 
 		bytesRemaining = bytesRemaining - thisLength
 		pageNumber = pageNumber + 1
+		bytesSent = bytesSent + thisLength
 	}
 	return nil
 }

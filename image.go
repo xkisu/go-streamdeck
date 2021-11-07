@@ -40,6 +40,12 @@ func deviceSpecifics(devName string, width, height int) (*gift.GIFT, error) {
 			gift.Rotate90(),
 			gift.FlipVertical(),
 		), nil
+	case "Stream Deck Original":
+		return gift.New(
+			gift.Resize(width, height, gift.LanczosResampling),
+			gift.Rotate180(),
+		), nil
+
 	default:
 		return nil, errors.New(fmt.Sprintf("Unsupported Device: %s", devName))
 	}
